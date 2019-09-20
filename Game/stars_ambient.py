@@ -14,7 +14,7 @@ class Stars:
         for i in range(amount):
             self.stars_obj[i] = GameImage("Assets/STAR.png")
             self.stars_obj[i].x = randint(0, self.gui.width)
-            self.stars_obj[i].y = self.gui.height
+            self.stars_obj[i].y = randint(0, self.gui.height)
             self.vel[i] = randint(0, 300)
 
     def draw(self):

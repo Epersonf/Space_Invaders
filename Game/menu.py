@@ -22,7 +22,7 @@ class Main_Menu:
 
     def draw(self, level, mode):
         self.gui.set_background_color((0, 0, 0))
-        self.Stars_Amb.draw()
+        #self.Stars_Amb.draw()
         if self.Play.draw():
             level[0] = 3
         if self.Mode.draw():
