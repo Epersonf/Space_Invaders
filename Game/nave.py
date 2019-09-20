@@ -30,7 +30,6 @@ class Nave:
         else:
             self.count = 60
         if self.keyboard.key_pressed("UP") and self.count == 60:
-            #fire
             self.count = 0
             self.fire.append(Sprite("Assets/FIRE.png"))
             x, y = self.obj.x, self.obj.y
