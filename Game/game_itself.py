@@ -1,5 +1,5 @@
-from Game.nave import *
-
+from Game.ship import *
+from Game.enemy import *
 from Game.stars_ambient import *
 
 class Game_Itself:
@@ -9,6 +9,7 @@ class Game_Itself:
     ms = None
     char = None
     stars = None
+    enemies = []
 
     def __init__(self, gui):
         self.gui = gui

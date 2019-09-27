@@ -17,6 +17,9 @@ class Nave:
         self.keyboard = self.gui.get_keyboard()
         self.obj.set_position(x, y)
 
+    def get_fire(self):
+        return self.fire
+
     def set_loc(self, x, y):
         self.obj.set_position(x, y)
 
