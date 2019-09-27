@@ -23,7 +23,7 @@ class Nave:
     def set_loc(self, x, y):
         self.obj.set_position(x, y)
 
-    def draw(self, mode):
+    def draw(self, mode, enemies):
         if self.keyboard.key_pressed("LEFT") and self.obj.x > 0:
             self.obj.move_x(-self.vel * 1/(mode[0]*0.8))
         elif self.keyboard.key_pressed("RIGHT") and self.obj.x < self.gui.width - self.obj.width:
@@ -41,6 +41,14 @@ class Nave:
 
 
         dec = 0
+        dec_enemy = 0
+        for i in range(len(self.fire)):
+            for j in range(len(enemies)):
+                if self.fire[i - dec_enemy].collided(enemies[j].obj):
+                    self.fire.pop(i - dec_enemy)
+                    enemies.pop(j - dec_enemy)
+                    dec_enemy += 1
+                    break
         for i in range(len(self.fire)):
             if self.fire[i-dec].y < -self.fire[i-dec].height:
                 self.fire.pop(i-dec)
@@ -48,6 +56,5 @@ class Nave:
                 continue
             self.fire[i-dec].move_y(-3)
             self.fire[i-dec].draw()
-
 
         self.obj.draw()
