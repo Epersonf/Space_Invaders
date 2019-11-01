@@ -9,34 +9,54 @@ class Game_Itself:
     ms = None
     char = None
     stars = None
+    high = 0
     enemies = []
+    score = []
 
     def spawn_new_wave(self, y_pos):
-        for i in range(18):
+        tamanho = len(self.enemies) - 1
+        for i in range(12):
             self.enemies.append(Enemy(self.gui, "Assets/ENEMY.PNG"))
-            self.enemies[i].obj.x = i * self.enemies[i].obj.width
-            self.enemies[i].obj.y = y_pos * self.enemies[i].obj.height
+            self.enemies[i + tamanho].obj.x = i * self.enemies[i].obj.width
+            self.enemies[i + tamanho].obj.y = y_pos * self.enemies[i].obj.height
+        return y_pos * self.enemies[i].obj.height + self.enemies[i].obj.height
 
-    def __init__(self, gui):
+    def reset(self, gui):
+        self.high = 0
+        self.enemies.clear()
         self.gui = gui
         self.kbrd = gui.get_mouse()
         self.ms = gui.get_keyboard()
-        self.char = Nave(gui, "Assets/NAVE.png")
-        self.char.set_loc(gui.width // 2 - self.char.obj.width//2, gui.height - 100)
+        self.char = Nave(gui, "Assets/NAVE.png", self.score)
+        self.char.set_loc(gui.width // 2 - self.char.obj.width // 2, gui.height - 100)
         self.stars = Stars(gui, 100)
         self.enemies.clear()
-        self.spawn_new_wave(4)
+        for i in range(8):
+            self.high = self.spawn_new_wave(i)
+
+    def __init__(self, gui, score):
+        self.score = score
+        self.reset(gui)
 
     def draw(self, level, mode):
         self.gui.set_background_color((0, 0, 0))
         self.stars.draw()
+        if len(self.enemies) == 0:
+            for i in range(8):
+                self.high = self.spawn_new_wave(i)
         hit = False
         for i in self.enemies:
             if i.get_hit():
                 hit = True
         for i in self.enemies:
             if hit:
+                self.high += self.enemies[0].obj.height
+                record = 0
+                for k in range(len(self.enemies)):
+                    if self.enemies[k].obj.y > record:
+                        record = self.enemies[k].obj.y
+                self.high = record + self.enemies[k].obj.height
                 i.down()
             i.draw()
-        self.char.draw(mode, self.enemies)
+        self.char.draw(mode, self.enemies, self.high)
 

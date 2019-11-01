@@ -14,11 +14,12 @@ debug = True
 fps = 0
 sss = 0
 contador = 0
+score = [0]
 
 
 #levels
 mm = Main_Menu(gui)
-gm = Game_Itself(gui)
+gm = Game_Itself(gui, score)
 mg = Mode_Gui(gui)
 
 #easy = 1, medium = 2, hard = 3
@@ -37,7 +38,8 @@ while True:
         mg.draw(level, mode)
 
     if prev_lvl != level:
-        gm = Game_Itself(gui)
+        score[0] = 0
+        gm = Game_Itself(gui, score)
 
     contador += gui.delta_time()
     sss += 1
@@ -45,7 +47,8 @@ while True:
         contador = 0
         fps = sss
         sss = 0
-    gui.draw_text(str(fps), 0, 0, 12, (255, 255, 255))
+    gui.draw_text(str(fps), 0, gui.height - 12, 12, (255, 255, 255))
+    gui.draw_text("Score: " + str(score[0]), 0, 0, 32, (255, 255, 255))
 
     if kbrd.key_pressed("ESC"):
         level[0] = 0

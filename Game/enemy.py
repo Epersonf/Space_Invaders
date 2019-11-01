@@ -7,6 +7,7 @@ class Enemy:
     x_vel = 50
     y_vel = None
     hit = False
+    dist = 0
 
     def __init__(self, gui, path):
         self.obj = Sprite(path)
@@ -23,7 +24,7 @@ class Enemy:
     def down(self):
         self.obj.y += self.y_vel
         self.x_vel = -self.x_vel
-        self.obj.x += self.x_vel *self.gui.delta_time() *5
+        self.obj.x += self.x_vel * self.gui.delta_time() * 5
 
     def draw(self):
 

@@ -10,12 +10,14 @@ class Nave:
     gui = None
     obj = None
     keyboard = None
+    score = []
 
-    def __init__(self, g, path, x=0, y=0):
+    def __init__(self, g, path, sc, x=0, y=0):
         self.gui = g
         self.obj = Sprite(path)
         self.keyboard = self.gui.get_keyboard()
         self.obj.set_position(x, y)
+        self.score = sc
 
     def get_fire(self):
         return self.fire
@@ -23,7 +25,7 @@ class Nave:
     def set_loc(self, x, y):
         self.obj.set_position(x, y)
 
-    def draw(self, mode, enemies):
+    def draw(self, mode, enemies, height):
         if self.keyboard.key_pressed("LEFT") and self.obj.x > 0:
             self.obj.move_x(-self.vel * 1/(mode[0]*0.8))
         elif self.keyboard.key_pressed("RIGHT") and self.obj.x < self.gui.width - self.obj.width:
@@ -42,12 +44,15 @@ class Nave:
 
         dec = 0
         dec_enemy = 0
-        for i in range(len(self.fire)):
-            for j in range(len(enemies)):
-                if self.fire[i - dec_enemy].collided(enemies[j].obj):
-                    self.fire.pop(i - dec_enemy)
-                    enemies.pop(j - dec_enemy)
-                    dec_enemy += 1
+        for i in range(len(self.fire)-1, -1, -1):
+            if self.fire[i + dec_enemy].y > height:
+                continue
+            for j in range(len(enemies)-1, -1, -1):
+                if self.fire[i + dec_enemy].collided(enemies[j].obj):
+                    self.fire.pop(i + dec_enemy)
+                    enemies.pop(j + dec_enemy)
+                    dec_enemy -= 1
+                    self.score[0] += 1
                     break
         for i in range(len(self.fire)):
             if self.fire[i-dec].y < -self.fire[i-dec].height:
