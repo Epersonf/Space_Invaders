@@ -13,6 +13,9 @@ class Game_Itself:
     enemies = []
     score = []
 
+    def enemies_fire(self):
+        self.enemies[randint(0, len(self.enemies) - 1)].fire_enemy()
+
     def spawn_new_wave(self, y_pos):
         tamanho = len(self.enemies) - 1
         for i in range(12):
@@ -31,14 +34,15 @@ class Game_Itself:
         self.char.set_loc(gui.width // 2 - self.char.obj.width // 2, gui.height - 100)
         self.stars = Stars(gui, 100)
         self.enemies.clear()
-        for i in range(8):
+        for i in range(3):
             self.high = self.spawn_new_wave(i)
 
     def __init__(self, gui, score):
         self.score = score
         self.reset(gui)
 
-    def draw(self, level, mode):
+    count = 0
+    def draw(self, level, mode, lives):
         self.gui.set_background_color((0, 0, 0))
         self.stars.draw()
         if len(self.enemies) == 0:
@@ -49,6 +53,8 @@ class Game_Itself:
             if i.get_hit():
                 hit = True
         for i in self.enemies:
+            if i.obj.y > self.gui.height - self.char.obj.height:
+                lives[0] = 0
             if hit:
                 self.high += self.enemies[0].obj.height
                 record = 0
@@ -57,6 +63,10 @@ class Game_Itself:
                         record = self.enemies[k].obj.y
                 self.high = record + self.enemies[k].obj.height
                 i.down()
-            i.draw()
+            i.draw(self.char, lives, mode)
         self.char.draw(mode, self.enemies, self.high)
+        self.count += self.gui.delta_time()
+        if self.count >= 1:
+            self.count = 0
+            self.enemies_fire()
 
