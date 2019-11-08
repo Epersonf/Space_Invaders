@@ -77,7 +77,6 @@ class Game_Itself:
             self.ufos[i-decUf].draw()
             if self.ufos[i-decUf].obj.x > self.gui.width:
                 self.ufos.pop(i-decUf)
-                self.count_ufo = randint(0, 3)
                 decUf += 1
             for j in range(len(self.char.fire)):
                 if self.char.fire[j-dec].collided(self.ufos[i-decUf].obj):
