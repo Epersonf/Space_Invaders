@@ -37,6 +37,7 @@ def get_scores():
 
 
 all_scores = get_scores()
+print(all_scores)
 
 
 def store_scores():
@@ -88,7 +89,7 @@ while True:
                 name[0] = "GUEST"
             if len(all_scores) == 0:
                 all_scores.append([name[0], str(score[0])])
-            for i in range(len(all_scores)):
+            for i in range(len(all_scores)-1):
                 if score[0] > int(all_scores[i][1]):
                     all_scores.insert(i, [name[0], str(score[0])])
                     all_scores.pop(len(all_scores) - 1)

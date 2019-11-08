@@ -1,6 +1,7 @@
 from Game.ship import *
 from Game.enemy import *
 from Game.stars_ambient import *
+from Game.ovni import *
 
 class Game_Itself:
 
@@ -12,6 +13,7 @@ class Game_Itself:
     high = 0
     enemies = []
     score = []
+    ufos = []
 
     def enemies_fire(self):
         self.enemies[randint(0, len(self.enemies) - 1)].fire_enemy()
@@ -42,6 +44,7 @@ class Game_Itself:
         self.reset(gui)
 
     count = 0
+    count_ufo = 30
     def draw(self, level, mode, lives):
         self.gui.set_background_color((0, 0, 0))
         self.stars.draw()
@@ -66,6 +69,31 @@ class Game_Itself:
             i.draw(self.char, lives, mode)
         self.char.draw(mode, self.enemies, self.high)
         self.count += self.gui.delta_time()
+        self.count_ufo += self.gui.delta_time()
+
+        dec = 0
+        decUf = 0
+        for i in range(len(self.ufos)):
+            self.ufos[i-decUf].draw()
+            if self.ufos[i-decUf].obj.x > self.gui.width:
+                self.ufos.pop(i-decUf)
+                self.count_ufo = randint(0, 3)
+                decUf += 1
+            for j in range(len(self.char.fire)):
+                if self.char.fire[j-dec].collided(self.ufos[i-decUf].obj):
+                    self.ufos.pop(i-decUf)
+                    self.char.fire.pop(j-dec)
+                    self.count_ufo = randint(0, 8)
+                    self.score[0] += 10
+                    dec += 1
+                    break
+            decUf += 1
+
+        if self.count_ufo >= 10 and len(self.ufos) <= 1:
+            self.count_ufo = 0
+            self.ufos.append(Ovni("Assets/OVNI.PNG", self.gui))
+            self.ufos[len(self.ufos)-1].set_location(0, randint(0, self.gui.height/3))
+
         if self.count >= 1:
             self.count = 0
             self.enemies_fire()

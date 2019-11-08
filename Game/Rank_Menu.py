@@ -10,9 +10,9 @@ class Rank_Menu:
         self.gui.set_background_color((0, 0, 0))
         self.loc = 0
         build = "Best players:"
-        for i in self.ac:
+        for i in range(len(self.ac)-1):
             self.print_build(build)
-            build = i[0] + " ... " + i[1]
+            build = self.ac[i][0] + " ... " + self.ac[i][1]
         self.print_build(build)
 
     size = 40
