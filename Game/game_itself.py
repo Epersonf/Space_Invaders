@@ -2,7 +2,7 @@ from Game.ship import *
 from Game.enemy import *
 from Game.stars_ambient import *
 from Game.ovni import *
-
+from Game.s_fire import *
 class Game_Itself:
 
     gui = None
@@ -14,6 +14,7 @@ class Game_Itself:
     enemies = []
     score = []
     ufos = []
+    sfire = None
 
     def enemies_fire(self):
         self.enemies[randint(0, len(self.enemies) - 1)].fire_enemy()
@@ -27,15 +28,18 @@ class Game_Itself:
         return y_pos * self.enemies[i].obj.height + self.enemies[i].obj.height
 
     def reset(self, gui):
+        self.sfire = S_fire(gui)
         self.high = 0
         self.enemies.clear()
+        self.ufos.clear()
         self.gui = gui
-        self.kbrd = gui.get_mouse()
-        self.ms = gui.get_keyboard()
+        self.ms = gui.get_mouse()
+        self.kbrd = gui.get_keyboard()
         self.char = Nave(gui, "Assets/NAVE.png", self.score)
         self.char.set_loc(gui.width // 2 - self.char.obj.width // 2, gui.height - 100)
         self.stars = Stars(gui, 100)
         self.enemies.clear()
+        self.enemyAmt = 4
         for i in range(3):
             self.high = self.spawn_new_wave(i)
 
@@ -45,11 +49,15 @@ class Game_Itself:
 
     count = 0
     count_ufo = 30
+    count_sf = 30
+    enemyAmt = 4
+    
     def draw(self, level, mode, lives):
         self.gui.set_background_color((0, 0, 0))
         self.stars.draw()
         if len(self.enemies) == 0:
-            for i in range(8):
+            self.enemyAmt += 1
+            for i in range(self.enemyAmt):
                 self.high = self.spawn_new_wave(i)
         hit = False
         for i in self.enemies:
@@ -70,6 +78,7 @@ class Game_Itself:
         self.char.draw(mode, self.enemies, self.high)
         self.count += self.gui.delta_time()
         self.count_ufo += self.gui.delta_time()
+        self.count_sf += self.gui.delta_time()
 
         dec = 0
         decUf = 0
@@ -87,6 +96,21 @@ class Game_Itself:
                     dec += 1
                     break
             decUf += 1
+
+        store = self.sfire.draw()
+        if store:
+            brk = len(self.enemies)
+            i = 0
+            while i < brk:
+                if self.sfire.obj.collided(self.enemies[i].obj):
+                    self.enemies.pop(i)
+                    i -= 1
+                    brk -= 1
+                i += 1
+        if self.kbrd.key_pressed("SPACE") and self.count_sf >= 5 and not store:
+            self.sfire.obj.x = self.char.obj.x + self.char.obj.width/2
+            self.sfire.obj.y = self.char.obj.y
+            self.count_sf = 0
 
         if self.count_ufo >= 10 and len(self.ufos) <= 1:
             self.count_ufo = 0

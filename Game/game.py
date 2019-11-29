@@ -37,12 +37,11 @@ def get_scores():
 
 
 all_scores = get_scores()
-print(all_scores)
 
 
 def store_scores():
     file = open("rank.txt", "w")
-    for i in range(len(all_scores)):
+    for i in range(10):
         file.write(all_scores[i][0] + "-" + all_scores[i][1] + "\n")
     file.close()
 
@@ -94,6 +93,7 @@ while True:
                     all_scores.insert(i, [name[0], str(score[0])])
                     all_scores.pop(len(all_scores) - 1)
                     break
+            all_scores = all_scores[0:10]
             store_scores()
             level[0] = 0
     elif level[0] == 1:
